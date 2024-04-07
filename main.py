@@ -1,3 +1,4 @@
+import json
 import requests
 from faker import Faker
 import random
@@ -7,7 +8,6 @@ import json
 
 with open("config.json", "r") as f:
     config = json.load(f)
-
 class Dashboard:
 
     def __init__(self) -> None:
@@ -43,7 +43,8 @@ class Dashboard:
         unvid_data = unvid_response.json()
         universe_id = unvid_data["universeId"]
 
-        r = self.session.post("https://apis.roblox.com/cloud-authentication/v1/apiKey",
+        try:
+            r = self.session.post("https://apis.roblox.com/cloud-authentication/v1/apiKey",
                         headers={"Content-Type": "application/json",
                               'User-Agent': 'Roblox/WinInet',
                               'x-csrf-token': token},
@@ -105,6 +106,8 @@ class Dashboard:
                                                                  }
                                 }
                         ).json()
+        except json.JSONDecodeError as e:
+            raise Exception(f"Too many API Keys, switch account: {e}")
 
         if 'message' in r:
             raise Exception(f"Too many API Keys, switch account: {r['message']}")
