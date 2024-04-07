@@ -3,6 +3,7 @@ from faker import Faker
 import random
 import sys
 import time
+
 class Dashboard:
 
     def __init__(self) -> None:
