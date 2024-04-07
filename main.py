@@ -8,7 +8,7 @@ class Dashboard:
     def __init__(self) -> None:
         proxy = random.choice(open("proxy.txt", "r").readlines()).strip()
         if proxy == []:
-            raise Exception("'proxy.txt' is empty")
+            raise Exception("'proxy.txt' is empty.")
         self.session = requests.Session()
         self.session.proxies = {'http': 'http://' + proxy.strip()}
 
