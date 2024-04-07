@@ -8,6 +8,7 @@ import json
 
 with open("config.json", "r") as f:
     config = json.load(f)
+
 class Dashboard:
 
     def __init__(self) -> None:
