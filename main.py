@@ -107,6 +107,7 @@ class Dashboard:
                                                                  }
                                 }
                         ).json()
+
         except json.JSONDecodeError as e:
             raise Exception(f"Too many API Keys, switch account: {e}")
 
