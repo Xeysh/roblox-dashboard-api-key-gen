@@ -3,6 +3,10 @@ from faker import Faker
 import random
 import sys
 import time
+import json
+
+with open("config.json", "r") as f:
+    config = json.load(f)
 
 class Dashboard:
 
@@ -128,9 +132,9 @@ if __name__ == "__main__":
     while True:
         time.sleep(1)
         try:
-            print(Dashboard().generator("YOUR_ROBLOX_ACCOUNT_COOKIE"))
+            print(Dashboard().generator(config["cookie"]))
         except requests.exceptions.ConnectionError:
-            print(Dashboard().deleter("YOUR_ROBLOX_ACCOUNT_COOKIE"))
+            print(Dashboard().deleter(config["cookie"]))
             sys.exit(0)
         except Exception as e:
             print(f"ERROR: {e}")
