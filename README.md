@@ -3,7 +3,7 @@ Educational purposes only.
 
 # Can you help me?
 
-no, a place called google
+no, theres a place called google
 
 # Important
 
