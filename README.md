@@ -1,5 +1,4 @@
 # roblox-dashboard-api-key-gen
-Place publishing only.
 Educational purposes only.
 
 # Can you help me?
