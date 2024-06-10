@@ -10,40 +10,29 @@ with open("config.json", "r") as f:
     config = json.load(f)
 
 class Dashboard:
-
     def __init__(self) -> None:
         proxy = random.choice(open("proxy.txt", "r").readlines()).strip()
         self.session = requests.Session()
         self.session.proxies = {'http': 'http://' + proxy}
 
     def generator(self, cookie: str) -> str:
+        self.session.cookies['.ROBLOSECURITY'] = cookie
+        
+        token = self.session.post("https://auth.roblox.com/v2/logout").headers["X-CSRF-TOKEN"]
 
-        token_response = self.session.post("https://auth.roblox.com/v2/logout",
-                                   cookies={".ROBLOSECURITY": cookie})
-        token = token_response.headers["X-CSRF-TOKEN"]
+        self.session.headers['x-csrf-token'] = token
+        self.session.headers['user-agent'] = 'Roblox'
 
-        user_response = self.session.get("https://users.roblox.com/v1/users/authenticated",
-                                    headers={'x-csrf-token': token, 'User-Agent': 'Roblox'},
-                                    cookies={'.ROBLOSECURITY': cookie})
+        user_id = self.session.get("https://users.roblox.com/v1/users/authenticated").json()['id']]
 
-        user_id = user_response.json()["id"]
+        game_id = self.session.get(f"https://inventory.roblox.com/v2/users/{user_id}/inventory/9",
+                                   params={'limit': '10',
+                                           'sortOrder': 'Asc'}).json()["data"][0]["assetId"]
 
-        inventory_response = self.session.get(
-            f"https://inventory.roblox.com/v2/users/{user_id}/inventory/9?limit=10&sortOrder=Asc",
-            headers={'x-csrf-token': token, 'User-Agent': 'Roblox'},
-            cookies={'.ROBLOSECURITY': cookie})
-
-        game_id = inventory_response.json()["data"][0]["assetId"]
-
-        unvid_response = self.session.get(f"https://apis.roblox.com/universes/v1/places/{game_id}/universe")
-        universe_id = unvid_data.json()["universeId"]
+        universe_id = self.session.get(f"https://apis.roblox.com/universes/v1/places/{game_id}/universe").json()["universeId"]
 
         try:
             r = self.session.post("https://apis.roblox.com/cloud-authentication/v1/apiKey",
-                        headers={"Content-Type": "application/json",
-                              'User-Agent': 'Roblox/WinInet',
-                              'x-csrf-token': token},
-                        cookies={".ROBLOSECURITY": cookie},
                         json={'cloudAuthUserConfiguredProperties': {'name': Faker().word().capitalize(),
                                                                  'description': Faker().word().capitalize(),
                                                                  'isEnabled': True,
@@ -113,4 +102,3 @@ class Dashboard:
 if __name__ == "__main__":
     while True:
         print(Dashboard().generator(config["cookie"]))
-        time.sleep(1)
